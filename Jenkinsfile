@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo "Checkout stage is running"
                 git branch: 'main',
-                    url: 'https://github.com/yourusername/devops-practical.git'
+                    url: 'https://github.com/uwimpuhwedivine/devops-practical-exam.git'
                 sh 'ls -la'
             }
         }
@@ -22,7 +22,7 @@ pipeline {
                 echo "Code Quality Check stage is running"
                 sh '''
                     echo "Checking PHP syntax..."
-                    find src -name "*.php" -exec php -l {} \;
+                    find src -name "*.php" -exec php -l {} \\;
                     echo "Checking for required files..."
                     [ -f src/index.php ] && echo "✓ index.php found"
                     [ -f src/registration.php ] && echo "✓ registration.php found"
@@ -53,10 +53,10 @@ pipeline {
                     sleep 15
                     
                     echo "Checking web service..."
-                    curl -f http://localhost:8080 || echo "Web service check failed"
+                    curl -f http://localhost:3000 || echo "Web service check failed"
                     
                     echo "Checking database connection..."
-                    docker-compose exec -T 25RP20136_db mysql -uroot -ppassword -e "SHOW DATABASES;" || echo "Database check failed"
+                    docker-compose exec -T db mysql -uroot -ppassword -e "SHOW DATABASES;" || echo "Database check failed"
                     
                     echo "Stopping test containers..."
                     docker-compose down
@@ -77,7 +77,7 @@ pipeline {
                     echo "Checking deployment status..."
                     docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
                     
-                    echo "Application URL: http://localhost:8080"
+                    echo "Application URL: http://localhost:3000"
                 '''
             }
         }
@@ -96,7 +96,7 @@ pipeline {
             echo "✅ Pipeline succeeded!"
             emailext (
                 subject: "Pipeline Success: ${env.JOB_NAME} - Build ${env.BUILD_NUMBER}",
-                body: "The ${env.JOB_NAME} pipeline succeeded.\n\nBuild URL: ${env.BUILD_URL}",
+                body: "The ${env.JOB_NAME} pipeline succeeded.\\n\\nBuild URL: ${env.BUILD_URL}",
                 to: 'admin@example.com'
             )
         }
@@ -104,7 +104,7 @@ pipeline {
             echo "❌ Pipeline failed!"
             emailext (
                 subject: "Pipeline Failed: ${env.JOB_NAME} - Build ${env.BUILD_NUMBER}",
-                body: "The ${env.JOB_NAME} pipeline failed.\n\nCheck: ${env.BUILD_URL}console",
+                body: "The ${env.JOB_NAME} pipeline failed.\\n\\nCheck: ${env.BUILD_URL}console",
                 to: 'admin@example.com'
             )
         }
